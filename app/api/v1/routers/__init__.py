@@ -8,12 +8,13 @@
 
 from fastapi import APIRouter
 from fastapi_users import FastAPIUsers
-from fastapi_users.authentication import JWTAuthentication
+from fastapi_users.authentication import JWTAuthentication, CookieAuthentication
 
 from app.api.v1.models import User, UserCreate, UserUpdate, UserDB
 from app.api.v1.services.User import get_user_manager
 
 jwt_authentication = JWTAuthentication(secret="SECRET", lifetime_seconds=3600)
+cookie_authentication = CookieAuthentication(secret="SECRET", lifetime_seconds=3600)
 fastapi_users = FastAPIUsers(get_user_manager, [jwt_authentication], User, UserCreate, UserUpdate, UserDB, )
 
 from app.api.v1.routers import health, users, auth
