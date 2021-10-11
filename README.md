@@ -16,8 +16,10 @@
 ## mysql数据库参数修改
 下述参数不修改，会导致同步数据库结构时报错
 
+```shell
 vi /etc/mysql/mysql.conf.d/mysqld.cnf
 max_allowed_packet = 25600
+```
 
 
 ## 初始化数据库结构
