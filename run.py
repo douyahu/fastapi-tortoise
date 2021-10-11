@@ -6,7 +6,7 @@
 @IDE ：PyCharm
 """
 import uvicorn as uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi_users.authentication import JWTAuthentication
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
@@ -15,10 +15,9 @@ from starlette_context import plugins
 from starlette_context.middleware import ContextMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 
+from app.api.v1.routers import user_router, api_v1_router
 from settings import TORTOISE_ORM
 from utils import env
-
-
 
 middleware = [
     Middleware(
@@ -43,6 +42,8 @@ middleware = [
 
 app = FastAPI(middleware=middleware, title="Tortoise ORM FastAPI example")
 
+jwt_authentication = JWTAuthentication(secret="SECRET", lifetime_seconds=3600)
+
 register_tortoise(
     app,
     config=TORTOISE_ORM,
@@ -50,13 +51,10 @@ register_tortoise(
     add_exception_handlers=True,  # 生产环境不要开，会泄露调试信息
 )
 
-jwt_authentication = JWTAuthentication(secret="SECRET", lifetime_seconds=3600)
+health_router = APIRouter()
 
-from app.api.v1.routers import init_fastapi_router
-
-init_fastapi_router(app)
-
-# app.include_router(api_router, prefix='/api/v1', responses={404: {"description": "Not found"}}, )
+app.include_router(user_router)
+app.include_router(api_v1_router, prefix='/api/v1', responses={404: {"description": "Not found"}}, )
 
 if __name__ == '__main__':
     debug = env("DEBUG")
