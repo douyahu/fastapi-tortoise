@@ -16,6 +16,9 @@ class TestModel(Model):
     test = fields.IntField(null=False, description=f"Test value", validators=[TestValidator()])
     ts = fields.IntField(null=False, description=f"Epoch time", validators=[TSValidator()])
 
+    class Meta:
+        table = "Test"
+
 
 class UpdateTestModel(Model):
     ts = fields.IntField(null=False, description=f"Epoch time", validators=[TSValidator()])

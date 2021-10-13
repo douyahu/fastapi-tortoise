@@ -31,3 +31,4 @@ aerich init-db
 
 
 ## Test model为测试数据模型
+test路由中包含了覆盖路由的写法和临时内存路由MemoryCRUDRouter类的demo
