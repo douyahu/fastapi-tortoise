@@ -8,6 +8,7 @@
 import io
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -42,7 +43,6 @@ def file_to_json(file_path):
 
 def get_env_path():
     env_path = os.path.join(BASE_DIR, get_config_by_env("DEPLOY_ENV"))
-    print('#### 读取的配置文件为:{ENV_PATH} ####'.format(ENV_PATH=env_path))
     return env_path
 
 

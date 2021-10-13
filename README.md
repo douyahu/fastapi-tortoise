@@ -28,3 +28,6 @@ max_allowed_packet = 25600
 aerich init -t settings.TORTOISE_ORM
 aerich init-db
 ```
+
+
+## Test model为测试数据模型

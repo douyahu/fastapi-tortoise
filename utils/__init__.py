@@ -6,14 +6,10 @@
 @IDE ：PyCharm
 """
 
-
-
 from utils.Env import get as env
 from utils.Redis import Redis
 
 mysql_url = env("MYSQL_URI")
-
-
 
 # redis配置
 redis_prefix = env("REDIS_PREFIX")

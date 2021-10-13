@@ -8,7 +8,9 @@
 from utils import mysql_url
 
 TORTOISE_ORM = {
-    "connections": {"default": mysql_url},
+    "connections": {
+        "default": mysql_url
+    },
     "apps": {
         "models": {
             # # 须添加“aerich.models” 后者“models”是上述models.py文件的路径

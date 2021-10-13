@@ -17,7 +17,7 @@ jwt_authentication = JWTAuthentication(secret="SECRET", lifetime_seconds=3600)
 cookie_authentication = CookieAuthentication(secret="SECRET", lifetime_seconds=3600)
 fastapi_users = FastAPIUsers(get_user_manager, [jwt_authentication], User, UserCreate, UserUpdate, UserDB, )
 
-from app.api.v1.routers import health, users, auth
+from app.api.v1.routers import health, users, auth, test
 
 user_router = APIRouter()
 user_router.include_router(health.router, prefix="/health", tags=["health"])
@@ -25,3 +25,4 @@ user_router.include_router(users.router, prefix="/users", tags=["users"])
 user_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 api_v1_router = APIRouter()
+api_v1_router.include_router(test.router)

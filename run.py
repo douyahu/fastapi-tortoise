@@ -7,15 +7,18 @@
 """
 import uvicorn as uvicorn
 from fastapi import FastAPI, APIRouter
-from fastapi_users.authentication import JWTAuthentication
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 from starlette_context import plugins
 from starlette_context.middleware import ContextMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 
 from app.api.v1.routers import user_router, api_v1_router
+from common.exceptions import APIException
+from common.responses import ResponseMessage as rsp
 from settings import TORTOISE_ORM
 from utils import env
 
@@ -42,7 +45,15 @@ middleware = [
 
 app = FastAPI(middleware=middleware, title="Tortoise ORM FastAPI example")
 
-jwt_authentication = JWTAuthentication(secret="SECRET", lifetime_seconds=3600)
+
+@app.exception_handler(APIException)
+async def validation_exception_handler(req: Request, ex: APIException):
+    detail = str(ex)
+    return JSONResponse(
+        status_code=ex.status,
+        content=rsp.fail(code=ex.code, message=ex.message, detail=ex.detail)
+    )
+
 
 register_tortoise(
     app,
@@ -60,4 +71,4 @@ if __name__ == '__main__':
     debug = env("DEBUG")
     reload = int(env("RELOAD"))
     port = int(env("PORT"))
-    uvicorn.run(app='run:app', host="0.0.0.0", port=port, reload=reload, debug=debug)
+    uvicorn.run(app='run:app', host="0.0.0.0", port=port, reload=reload, debug=debug, log_level="info")
