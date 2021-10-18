@@ -16,7 +16,7 @@ from starlette_context import plugins
 from starlette_context.middleware import ContextMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 
-from app.api.v1.routers import user_router, api_v1_router
+from app.api.v1.routers import api_router
 from common.exceptions import APIException
 from common.responses import ResponseMessage as rsp
 from settings import TORTOISE_ORM
@@ -64,8 +64,8 @@ register_tortoise(
 
 health_router = APIRouter()
 
-app.include_router(user_router)
-app.include_router(api_v1_router, prefix='/api/v1', responses={404: {"description": "Not found"}}, )
+# app.include_router(user_router)
+app.include_router(api_router, responses={404: {"description": "Not found"}}, )
 
 if __name__ == '__main__':
     debug = env("DEBUG")

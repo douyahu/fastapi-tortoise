@@ -10,6 +10,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.get("")
+@router.get("", summary='健康检查')
 async def health():
     return 'success'

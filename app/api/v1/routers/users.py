@@ -8,34 +8,29 @@
 from fastapi import Depends, APIRouter
 
 from app.api.v1.models import User
-from app.api.v1.routers import fastapi_users
-
-current_user = fastapi_users.current_user()
-current_active_user = fastapi_users.current_user(active=True)
-current_superuser = fastapi_users.current_user(active=True, superuser=True)
+from app.api.v1.routers import fastapi_users, current_user, current_active_user, current_active_verified_user, \
+    current_superuser
 
 router = APIRouter()
 
-router.include_router(fastapi_users.get_users_router())
-router.include_router(fastapi_users.get_users_router(requires_verification=True))
-current_active_verified_user = fastapi_users.current_user(active=True, verified=True)
+router.include_router(fastapi_users.get_users_router(requires_verification=True))  # 是否需要用户认证
 
 
-@router.get("/current-user")
+@router.get("/current-user", summary='获取个人信息')
 async def protected_route(user: User = Depends(current_user)):
     return f"Hello, {user.email}"
 
 
-@router.get("/active-user")
+@router.get("/active-user", summary='是否为活跃用户')
 async def protected_route(user: User = Depends(current_active_user)):
     return f"Hello, {user.email}"
 
 
-@router.get("/active-verified-user")
+@router.get("/active-verified-user", summary='是否为活跃的已登录用户')
 def protected_route(user: User = Depends(current_active_verified_user)):
     return f"Hello, {user.email}"
 
 
-@router.get("/active-super-user")
+@router.get("/active-super-user", summary='是否为活跃的超级用户')
 async def protected_route(user: User = Depends(current_superuser)):
     return f"Hello, {user.email}"
