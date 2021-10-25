@@ -9,8 +9,9 @@
 from fastapi import APIRouter
 
 from app.api.v1.routers import fastapi_users, jwt_authentication
+from middlewares.LoggingRoute import LoggingRoute
 
-router = APIRouter()
+router = APIRouter(route_class=LoggingRoute)
 
 # jwt登陆
 router.include_router(fastapi_users.get_auth_router(jwt_authentication), prefix="/jwt")

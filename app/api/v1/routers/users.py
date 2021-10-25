@@ -10,8 +10,9 @@ from fastapi import Depends, APIRouter
 from app.api.v1.models import User
 from app.api.v1.routers import fastapi_users, current_user, current_active_user, current_active_verified_user, \
     current_superuser
+from middlewares.LoggingRoute import LoggingRoute
 
-router = APIRouter()
+router = APIRouter(route_class=LoggingRoute)
 
 router.include_router(fastapi_users.get_users_router(requires_verification=True))  # 是否需要用户认证
 

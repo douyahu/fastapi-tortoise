@@ -15,7 +15,6 @@ from starlette.responses import JSONResponse
 from starlette_context import plugins
 from starlette_context.middleware import ContextMiddleware
 from tortoise.contrib.fastapi import register_tortoise
-
 from app.api.v1.routers import api_router
 from common.exceptions import APIException
 from common.responses import ResponseMessage as rsp
