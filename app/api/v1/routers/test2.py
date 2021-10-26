@@ -5,10 +5,11 @@
 @File ：test2.py
 @IDE ：PyCharm
 """
-
+from fastapi import Depends
 from fastapi_crudrouter import MemoryCRUDRouter, TortoiseCRUDRouter
 
-from app.api.v1.models import TestSchema, TestSchemaCreate, TestSchemaUpdate, TestModel
+from app.api.v1.models import TestSchema, TestSchemaCreate, TestSchemaUpdate, TestModel, User
+from app.api.v1.routers import current_user
 
 router = TortoiseCRUDRouter(
     schema=TestSchema,
@@ -31,5 +32,5 @@ router = TortoiseCRUDRouter(
 
 
 @router.get('/{item_id}')
-def overloaded_get_one():
+def overloaded_get_one(user: User = Depends(current_user)):
     return 'My overloaded route that returns one item'

@@ -7,9 +7,7 @@
 """
 from fastapi import APIRouter
 
-from middlewares.LoggingRoute import LoggingRoute
-
-router = APIRouter(route_class=LoggingRoute)
+router = APIRouter()
 
 
 @router.get("", summary='健康检查')

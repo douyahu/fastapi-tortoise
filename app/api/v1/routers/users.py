@@ -16,18 +16,25 @@ router = APIRouter(route_class=LoggingRoute)
 
 router.include_router(fastapi_users.get_users_router(requires_verification=True))  # 是否需要用户认证
 
+# 注册
+router.include_router(fastapi_users.get_register_router(), )
+
+# 重置密码
+router.include_router(fastapi_users.get_reset_password_router(), )
+
+
 
 @router.get("/current-user", summary='获取个人信息')
 async def protected_route(user: User = Depends(current_user)):
     return f"Hello, {user.email}"
 
 
-@router.get("/active-user", summary='是否为活跃用户')
+@router.get("/active-user", summary='是否为活跃的用户')
 async def protected_route(user: User = Depends(current_active_user)):
     return f"Hello, {user.email}"
 
 
-@router.get("/active-verified-user", summary='是否为活跃的已登录用户')
+@router.get("/active-verified-user", summary='是否为活跃且后端核准的用户')
 def protected_route(user: User = Depends(current_active_verified_user)):
     return f"Hello, {user.email}"
 
@@ -35,3 +42,5 @@ def protected_route(user: User = Depends(current_active_verified_user)):
 @router.get("/active-super-user", summary='是否为活跃的超级用户')
 async def protected_route(user: User = Depends(current_superuser)):
     return f"Hello, {user.email}"
+
+

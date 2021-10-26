@@ -37,3 +37,6 @@ class UserDB(User, models.BaseUserDB, PydanticModel):
 
 class OAuthAccount(TortoiseBaseOAuthAccountModel):
     user = fields.ForeignKeyField("models.UserModel", related_name="oauth_accounts")
+    class Meta:
+        table = "Account"
+

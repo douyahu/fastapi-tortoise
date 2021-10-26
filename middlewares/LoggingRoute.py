@@ -16,6 +16,8 @@ from fastapi import HTTPException, Request, Response
 from fastapi.routing import APIRoute
 from user_agents import parse
 
+from utils import logger
+
 
 def get_service_ip(request):
     ip = request.headers.get(
@@ -124,17 +126,16 @@ class LoggingRoute(APIRoute):
                     log_dict['useragent'] = str(log_dict['useragent'])
                     log_dict['query'] = str(log_dict['query'])
                     log_dict['body'] = str(log_dict['body'])
+                    log_dict['user'] = request.user
                     await Log.create(**log_dict)
-
-                    print(str(json.dumps(request_json)))
-                    print(str(json.dumps(metrics_json)))
+                    logger.debug("request:{data}".format(data=json.dumps(request_json)))
+                    logger.debug("response:{data}".format(data=json.dumps(metrics_json)))
                 return response
 
             except Exception as exc:
                 body = await request.body()
                 detail = {"errors": str(exc), "body": body.decode("utf-8")}
-                print(detail)
-
+                logger.error(detail)
                 raise HTTPException(status_code=422, detail=detail)
 
         return custom_route_handler

@@ -8,6 +8,7 @@
 from fastapi_crudrouter import TortoiseCRUDRouter
 
 from app.api.v1.models.Test import TestSchema, TestSchemaCreate, TestModel, TestSchemaUpdate
+from middlewares.LoggingRoute import LoggingRoute
 
 router = TortoiseCRUDRouter(
     schema=TestSchema,
@@ -15,5 +16,6 @@ router = TortoiseCRUDRouter(
     update_schema=TestSchemaUpdate,
     db_model=TestModel,
     prefix="test",  # 路由前缀
-    delete_all_route=False
+    delete_all_route=False,
+    route_class=LoggingRoute
 )

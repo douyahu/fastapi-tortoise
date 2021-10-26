@@ -21,6 +21,9 @@ class UserManager(BaseUserManager[UserCreate, UserDB]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
+    async def on_after_verify(self, user: UserDB, request: Optional[Request] = None):
+        print(f"User {user.id} has been verified")
+
     async def on_after_register(self, user: UserDB, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 

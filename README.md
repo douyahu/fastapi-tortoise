@@ -29,6 +29,9 @@ aerich init -t settings.TORTOISE_ORM
 aerich init-db
 ```
 
+## 日志模块
+AuthenticationUser中间件，记录了所有对服务端的请求操作，并保存导数据，该操作会影响服务的性能
 
 ## Test model为测试数据模型
 test路由中包含了覆盖路由的写法和临时内存路由MemoryCRUDRouter类的demo
+

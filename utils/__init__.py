@@ -5,8 +5,10 @@
 @File ：__init__.py.py
 @IDE ：PyCharm
 """
+from loguru import logger
 
 from utils.Env import get as env
+from utils.Logger import log_info_path, should_rotate, logs_func
 from utils.Redis import Redis
 
 mysql_url = env("MYSQL_URI")
@@ -23,3 +25,6 @@ redis = Redis(
     socket_keepalive=60,
     ssl=env("REDIS_SSL")
 ).conn
+
+# logger配置
+logger.add(log_info_path, level="DEBUG", rotation=should_rotate, retention=logs_func, enqueue=True)

@@ -5,19 +5,22 @@
 @File ：run.py.py
 @IDE ：PyCharm
 """
+
 import uvicorn as uvicorn
 from fastapi import FastAPI, APIRouter
 from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette_context import plugins
 from starlette_context.middleware import ContextMiddleware
 from tortoise.contrib.fastapi import register_tortoise
+
 from app.api.v1.routers import api_router
 from common.exceptions import APIException
 from common.responses import ResponseMessage as rsp
+from middlewares.AuthenticationUser import AuthenticationUser
 from settings import TORTOISE_ORM
 from utils import env
 
@@ -29,10 +32,12 @@ middleware = [
             plugins.CorrelationIdPlugin()
         )
     ),
-    Middleware(
-        SessionMiddleware, secret_key="6YJk0fjS4KjYPedeLOkLdjJimQRW3zZiwdrVFyedP2ygdOmys5yCjz76dCSvzwzE",
-        session_cookie="tortoise"
-    ),
+    # Middleware(
+    #     SessionMiddleware, secret_key="6YJk0fjS4KjYPedeLOkLdjJimQRW3zZiwdrVFyedP2ygdOmys5yCjz76dCSvzwzE",
+    #     session_cookie="tortoise"
+    # ),
+    Middleware(AuthenticationMiddleware, backend=AuthenticationUser()),
+
     Middleware(
         CORSMiddleware,
         allow_origins=["*"],
