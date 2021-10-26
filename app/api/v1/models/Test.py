@@ -20,12 +20,11 @@ class TestModel(Model):
         table = "Test"
 
 
-class UpdateTestModel(Model):
-    ts = fields.IntField(null=False, description=f"Epoch time", validators=[TSValidator()])
-
-
 # Pydantic schema
+# include 包含的字段,比如id
+# exclude 要排除的字段,如去掉password
 TestSchema = pydantic_model_creator(TestModel, name=f"{TestModel.__name__}Schema")
-TestSchemaCreate = pydantic_model_creator(TestModel, name=f"{TestModel.__name__}SchemaCreate", exclude_readonly=True)
-TestSchemaUpdate = pydantic_model_creator(UpdateTestModel, name=f"{UpdateTestModel.__name__}SchemaUpdate",
+TestSchemaCreate = pydantic_model_creator(TestModel, name=f"{TestModel.__name__}SchemaCreate",
+                                          exclude=('id',))
+TestSchemaUpdate = pydantic_model_creator(TestModel, name=f"{TestModel.__name__}SchemaUpdate",
                                           exclude_readonly=True)

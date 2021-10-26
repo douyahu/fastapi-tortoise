@@ -16,6 +16,6 @@ router = TortoiseCRUDRouter(
     update_schema=TestSchemaUpdate,
     db_model=TestModel,
     prefix="test",  # 路由前缀
-    delete_all_route=False,
+    delete_all_route=True,
     route_class=LoggingRoute
 )

@@ -11,32 +11,20 @@ from fastapi_users_db_tortoise import TortoiseBaseOAuthAccountModel
 from tortoise import fields
 from tortoise.contrib.pydantic import PydanticModel
 
-
-class User(models.BaseUser):
-    pass
-
-
-class UserCreate(models.BaseUserCreate):
-    pass
-
-
-class UserUpdate(models.BaseUserUpdate):
-    pass
+from app.api.v1.validations.User import UserValidation
 
 
 class UserModel(TortoiseBaseUserModel):
+    '''数据库模型'''
+
     class Meta:
         table = "User"
 
 
-class UserDB(User, models.BaseUserDB, PydanticModel):
+class UserDB(UserValidation, models.BaseUserDB, PydanticModel):
+    '''模型映射'''
+
     class Config:
         orm_mode = True
         orig_model = UserModel
-
-
-class OAuthAccount(TortoiseBaseOAuthAccountModel):
-    user = fields.ForeignKeyField("models.UserModel", related_name="oauth_accounts")
-    class Meta:
-        table = "Account"
 

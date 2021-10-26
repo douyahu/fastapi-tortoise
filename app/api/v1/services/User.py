@@ -11,12 +11,13 @@ from fastapi import Depends, Request
 from fastapi_users import BaseUserManager
 from fastapi_users_db_tortoise import TortoiseUserDatabase
 
-from app.api.v1.models import UserCreate, UserDB, UserModel, OAuthAccount
+from app.api.v1.models import UserDB, UserModel
+from app.api.v1.validations.User import UserCreateValidation
 
 SECRET = "SECRET"
 
 
-class UserManager(BaseUserManager[UserCreate, UserDB]):
+class UserManager(BaseUserManager[UserCreateValidation, UserDB]):
     user_db_model = UserDB
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
@@ -38,8 +39,10 @@ class UserManager(BaseUserManager[UserCreate, UserDB]):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
 
 
+
+# 数据库适配器
 def get_user_db():
-    yield TortoiseUserDatabase(UserDB, UserModel, OAuthAccount)
+    yield TortoiseUserDatabase(UserDB, UserModel)
 
 
 def get_user_manager(user_db=Depends(get_user_db)):
