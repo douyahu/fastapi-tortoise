@@ -35,3 +35,12 @@ AuthenticationUser中间件，记录了所有对服务端的请求操作，并�
 ## Test model为测试数据模型
 test路由中包含了覆盖路由的写法和临时内存路由MemoryCRUDRouter类的demo
 
+
+## backend
+如需在后端运行，则需要在run.py中添加对应方法，并且需要在该方法上添加装饰器@typer_app.command()
+然后运行：python run.py --help
+
+## fastapi的运行
+调试下，直接运行asgi.py
+
+

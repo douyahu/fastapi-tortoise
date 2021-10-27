@@ -11,10 +11,10 @@ from loguru import logger
 from utils.Email import EmailService
 from utils.Env import get as env
 from utils.Logger import log_info_path, should_rotate, logs_func
-from utils.TortoiseLog import tortoise_logger_db_client, sh, tortoise_logger_tortoise
 
 secret = env("SECRET")
 lifetime_seconds = env("LIFETIME_SECONDS")
+logging_level = env("LOGGING_LEVEL")
 
 mysql_host = env("MYSQL_HOST")
 mysql_port = env("MYSQL_PORT")
@@ -46,5 +46,7 @@ email_service = EmailService(env("EMAIL_SERVER"),
 logger.add(log_info_path, level="DEBUG", rotation=should_rotate, retention=logs_func, enqueue=True)
 
 # tortoise log日志
+from utils.TortoiseLog import tortoise_logger_db_client, sh, tortoise_logger_tortoise
+
 tortoise_logger_db_client.addHandler(sh)
 # tortoise_logger_tortoise.addHandler(sh)
