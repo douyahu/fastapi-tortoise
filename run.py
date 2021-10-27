@@ -25,7 +25,7 @@ def log():
         logger.info("开始执行本轮脚本:{datatime}".format(datatime=datetime.now()))
         run_async(log_backend())
         logger.info("本轮脚本执行结束:{datatime}".format(datatime=datetime.now()))
-        time.sleep(5)
+        time.sleep(interval)
 
 
 @typer_app.command()
