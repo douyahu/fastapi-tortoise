@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  fastapi-tortoise-api:
+    image: fastapi-tortoise:latest
+    container_name: fastapi-tortoise
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app
+    command: gunicorn -c gunicorn.conf.py asgi:app
+
+
+  log_backend:
+    image: fastapi-tortoise:latest
+    container_name: log-backend
+    restart: always
+    volumes:
+      - ./:/app
+    command: supervisord -c /app/supervisord-all.conf
