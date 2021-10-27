@@ -5,13 +5,16 @@
 @File ：__init__.py.py
 @IDE ：PyCharm
 """
-
+import redis as redis
 from loguru import logger
 
+from utils.Email import EmailService
 from utils.Env import get as env
 from utils.Logger import log_info_path, should_rotate, logs_func
-from utils.Redis import Redis
 from utils.TortoiseLog import tortoise_logger_db_client, sh, tortoise_logger_tortoise
+
+secret = env("SECRET")
+lifetime_seconds = env("LIFETIME_SECONDS")
 
 mysql_host = env("MYSQL_HOST")
 mysql_port = env("MYSQL_PORT")
@@ -22,16 +25,22 @@ mysql_url = env("MYSQL_URI")
 
 # redis配置
 redis_prefix = env("REDIS_PREFIX")
-redis = Redis(
-    env("REDIS_HOST"),
-    env("REDIS_PORT"),
-    env("REDIS_PASSWORD"),
-    env("REDIS_DB"),
-    int(env("REDIS_POOL_SIZE")),
-    socket_connect_timeout=10,
-    socket_keepalive=60,
-    ssl=env("REDIS_SSL")
-).conn
+redis_pool = redis.ConnectionPool(host=env("REDIS_HOST"),
+                                  port=env("REDIS_PORT"),
+                                  db=env("REDIS_DB"),
+                                  password=env("REDIS_PASSWORD"),
+                                  socket_connect_timeout=10,
+                                  socket_keepalive=60,
+                                  )
+redis_client = redis.StrictRedis(connection_pool=redis_pool)
+
+# 邮件
+email_service = EmailService(env("EMAIL_SERVER"),
+                             env("EMAIL_PORT"),
+                             env("EMAIL_USE_SSL"),
+                             env("EMAIL_USERNAME"),
+                             env("EMAIL_PASSWORD"),
+                             env("EMAIL_DEFAULT_SENDER"))
 
 # logger配置
 logger.add(log_info_path, level="DEBUG", rotation=should_rotate, retention=logs_func, enqueue=True)

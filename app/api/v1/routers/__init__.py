@@ -11,12 +11,13 @@ from fastapi_users.authentication import JWTAuthentication, CookieAuthentication
 
 from app.api.v1.models import UserDB
 from app.api.v1.services.User import get_user_manager
-# jwt认证配置
 from app.api.v1.validations.User import UserValidation, UserUpdateValidation, UserCreateValidation
+from utils import secret, lifetime_seconds
 
-jwt_authentication = JWTAuthentication(secret="SECRET", lifetime_seconds=3600, tokenUrl="auth/jwt/login")
+# jwt认证配置
+jwt_authentication = JWTAuthentication(secret=secret, lifetime_seconds=lifetime_seconds, tokenUrl="auth/jwt/login")
 # cookie认证配置
-cookie_authentication = CookieAuthentication(secret="SECRET", lifetime_seconds=3600, )
+cookie_authentication = CookieAuthentication(secret=secret, lifetime_seconds=lifetime_seconds, )
 fastapi_users = FastAPIUsers(get_user_manager, [jwt_authentication, cookie_authentication], UserValidation,
                              UserCreateValidation,
                              UserUpdateValidation, UserDB, )

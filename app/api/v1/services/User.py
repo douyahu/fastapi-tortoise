@@ -13,14 +13,13 @@ from fastapi_users_db_tortoise import TortoiseUserDatabase
 
 from app.api.v1.models import UserDB, UserModel
 from app.api.v1.validations.User import UserCreateValidation
-
-SECRET = "SECRET"
+from utils import secret
 
 
 class UserManager(BaseUserManager[UserCreateValidation, UserDB]):
     user_db_model = UserDB
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = secret
+    verification_token_secret = secret
 
     async def on_after_verify(self, user: UserDB, request: Optional[Request] = None):
         print(f"User {user.id} has been verified")
@@ -37,7 +36,6 @@ class UserManager(BaseUserManager[UserCreateValidation, UserDB]):
             self, user: UserDB, token: str, request: Optional[Request] = None
     ):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
-
 
 
 # 数据库适配器
