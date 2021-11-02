@@ -1,3 +1,7 @@
+## 描述
+
+tortoise 使用aiomysql驱动程序
+
 ## 依赖包
 
 * aerich Tortoise-ORM 的数据库迁移工具  
@@ -38,18 +42,30 @@ test路由中包含了覆盖路由的写法和临时内存路由MemoryCRUDRouter
 
 ## backend
 
-如需在后端运行，则需要在run.py中添加对应方法，并且需要在该方法上添加装饰器@typer_app.command()
-然后运行：python run.py --help
+* 如需在后端运行，则需要在run.py中添加对应方法
+* 并且需要在该方法上添加装饰器@typer_app.command()
+* 然后运行：python run.py --help
 
 ## 服务的运行
+
 ### fastapi的运行
 
-* 调试模式下: python run asgi.py 
+* 调试模式下: python run asgi.py
 * 非调试模式下：gunicorn -c gunicorn.conf.py asgi:app
 
 ### 后端脚本服务的运行
 
-* 通过docker-compose 指定supervisor-all 直接拉起来所有脚本服务
-* 通过supervisor 指定./supervisor/*conf 启动指定脚本服务
+* 通过docker-compose 指定supervisor-all直接拉起来所有脚本服务
+* supervisor守护指定的后端服务
+  ```shell
+    cp ./backend/supervisor/*.conf /etc/supervisor/conf.d/ 
+    supervisorctl update 
+    supervisor restart log 启动指定脚本服务
+  ```
 
 
+### 添加pylint检查代码
+```shell
+pip install pylint
+pylint --rcfile=.pylintrc app
+```
