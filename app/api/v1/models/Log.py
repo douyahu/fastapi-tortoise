@@ -6,11 +6,13 @@
 # E-mail: huyulong@zhongan.io
 # Time: 2021/5/19
 from tortoise import fields
-from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.models import Model
 
 
 class LogModel(Model):
+    '''
+    日志模型
+    '''
     id = fields.IntField(pk=True, description='pk')
     user = fields.ForeignKeyField('models.UserModel', related_name='logs', description='操作用户', null=True, )
     ip = fields.CharField(null=True, max_length=128, description='IP')
@@ -36,5 +38,3 @@ class LogModel(Model):
 
     class Meta:
         table = "Log"
-
-
