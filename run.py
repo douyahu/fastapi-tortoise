@@ -11,7 +11,7 @@ from datetime import datetime
 import typer
 from tortoise import run_async
 
-from backend.log import log_backend
+from backend.supervisor.tasks.log import log_backend
 from utils.Logger import logger
 
 typer_app = typer.Typer()

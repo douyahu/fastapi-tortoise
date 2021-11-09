@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-@Auth ： 胡玉龙
-@File ：log.py
-@IDE ：PyCharm
-"""
+# # -*- coding: utf-8 -*-
+# """
+# @Auth ： 胡玉龙
+# @File ：log.py
+# @IDE ：PyCharm
+# """
 from app.api.v1.models import LogModel
-from backend import tortoise_init
+from backend.supervisor.tasks import tortoise_init
 
 
 @tortoise_init

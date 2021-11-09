@@ -7,7 +7,7 @@
 
 # coding:utf-8
 
-from .celery.celery_tasks import add_sleep_2, add_sleep_10
+from .celery_tasks import add_sleep_2, add_sleep_10
 
 
 def start_add_sleep_2():
