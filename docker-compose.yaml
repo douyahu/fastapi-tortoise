@@ -18,4 +18,4 @@ services:
     restart: always
     volumes:
       - ./:/app
-    command: supervisord -c /app/supervisord-all.confs
+    command: supervisord -c /app/all.confs

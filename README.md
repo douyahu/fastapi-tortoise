@@ -21,7 +21,7 @@ tortoise 使用aiomysql驱动程序
 下述参数不修改，会导致同步数据库结构时报错
 
 ```shell
-vi /etc/mysql/mysql.conf.d/mysqld.cnf
+vi /etc/mysql/mysql.confs.d/mysqld.cnf
 max_allowed_packet = 25600
 ```
 
@@ -58,7 +58,7 @@ test路由中包含了覆盖路由的写法和临时内存路由MemoryCRUDRouter
 * 通过docker-compose 指定supervisor-all直接拉起来所有脚本服务
 * supervisor守护指定的后端服务
   ```shell
-    cp ./backend/supervisor/*.conf /etc/supervisor/conf.d/ 
+    cp ./backend/supervisor/*.confs /etc/supervisor/confs.d/ 
     supervisorctl update 
     supervisor restart log 启动指定脚本服务
   ```
@@ -68,4 +68,14 @@ test路由中包含了覆盖路由的写法和临时内存路由MemoryCRUDRouter
 ```shell
 pip install pylint
 pylint --rcfile=.pylintrc app
+```
+
+
+### 添加celery
+celery对目录结构的要求十分严格
+windows机器上必须加上-P eventlet启动，否则会出错，
+* -n 指定当前worker名字，
+* -Q 指定该worker监听一个或多个任务队列。
+```shell
+celery -A backend.celery.celery_app worker -l info -P eventlet -n win
 ```

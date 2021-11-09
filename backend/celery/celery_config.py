@@ -39,7 +39,7 @@ task_reject_on_worker_lost = False
 
 ############# result backend 配置 #############
 
-result_backend = 'redis://:pwd@host:port/db2'  # 运行结果存储地址实例
+result_backend = ''  # 运行结果存储地址实例
 result_backend_always_retry = False  # 如果启用，后端将尝试重试可恢复异常的事件，而不是传播异常。它将在 2 次重试之间使用指数退避睡眠时间。
 result_backend_max_sleep_between_retries_ms = 10000  # 两次后端操作重试之间的最大休眠时间
 result_backend_base_sleep_between_retries_ms = 10  # 这指定了两次后端操作重试之间的基本休眠时间。
@@ -52,7 +52,7 @@ result_expires = 60 * 60 * 24  # 结果存储的有效期，默认为1天
 result_cache_max = False  # 客户端缓存结果
 result_chord_join_timeout = 3.0  # The timeout in seconds (int/float) when joining a group’s results within a chord.
 result_chord_retry_interval = 1.0  # Default interval for retrying chord tasks.
-override_backends = False  # 允许覆盖后端实现
+override_backends = None  # 允许覆盖后端实现
 
 ############# DB配置 #############
 database_short_lived_sessions = False
@@ -60,7 +60,7 @@ database_table_schemas = {}  # 自动创建两个表来存储任务的结果元�
 database_table_names = {}  # 自动创建两个表来存储任务的结果元数据
 
 ############# broker配置 #############
-broker_url = 'redis://:pwd@host:port/db1'  # broker地址
+broker_url = ''  # broker地址
 # broker_read_url = 'amqp://user:pass@broker.example.com:56721' # 用于消费和生产的代理连接。
 # broker_write_url = 'amqp://user:pass@broker.example.com:56722' # 用于消费和生产的代理连接。
 # broker_failover_strategy
@@ -76,7 +76,7 @@ broker_login_method = 'AMQPLAIN'  # amqp 登录方法
 
 
 ############# worker配置 #############
-imports = []  # 导入的任务模块
+imports = ('backend.celery.celery_tasks',)  # 导入的任务模块
 include = []  # 和import相同，只是用于加载特殊模块，以示区分
 # 在每个任务执行之前，指示工作人员检查此任务是否是重复
 # 消息重复数据删除仅发生在具有相同标识符、启用延迟确认、由消息代理重新交付且其状态SUCCESS在结果后端中的任务。
