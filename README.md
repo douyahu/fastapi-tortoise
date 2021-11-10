@@ -72,10 +72,19 @@ pylint --rcfile=.pylintrc app
 
 
 ### 添加celery
-celery对目录结构的要求十分严格
-windows机器上必须加上-P eventlet启动，否则会出错，
+* celery对目录结构的要求十分严格
+* windows机器上必须加上-P eventlet启动，否则会出错，
 * -n 指定当前worker名字，
 * -Q 指定该worker监听一个或多个任务队列。
+
+#### 常用方法
+建议使用 apply_async
+* delay， 用来进行最简单便捷的任务执行，不可附加参数；
+* apply_async， 对于任务的执行附加额外的参数，对任务进行控制；
+* celery_app.send_task， 可以执行未在 Celery 中进行注册的任务。
+
 ```shell
-celery -A backend.celery.celery_app worker -l info -P eventlet -n win
+celery -A backend.celery.celery_app worker -l info -P eventlet -n win_default
+celery -A backend.celery.celery_app worker -l info -P eventlet -n win_music -Q musice
+celery -A backend.celery.celery_app worker -l info -P eventlet -n win_video -Q video
 ```

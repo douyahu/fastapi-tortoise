@@ -6,13 +6,13 @@
 """
 
 # coding:utf-8
+from backend.celery import celery_app
+from backend.celery.celery_tasks import default_task, music_task
 
-from .celery_tasks import add_sleep_2, add_sleep_10
 
-
-def start_add_sleep_2():
-    print("[*]Start function start_add_sleep_2")
-    r = add_sleep_2.apply_async((2, 20000), queue='celery')  # 异步任务
+def start_default_task():
+    print("[*]Start function default task")
+    r = default_task.delay(3, 3)
     print(r.ready())
     # print(r.result)
     print(r.get())
@@ -21,9 +21,26 @@ def start_add_sleep_2():
     print("[*]Done")
 
 
-def start_add_sleep_10():
-    print("[*]Start function start_add_sleep_60")  # 'e709795c-5ffd-4ed7-9d39-2a76b834dafb'
-    r = add_sleep_10.delay(3, 3)
+def start_music_task():
+    '''
+    gnore_result=True，不存储任务结果，节省资源和空间
+    :return: None
+    '''
+    print("[*]Start function music_task")
+    r = music_task.apply_async((1, 22222),
+                               exhcange='media',
+                               queue='music',
+                               routing_key='media.music',
+                               gnore_result=False)
+    print(r.result)
+    print(r.get())
+    print(r.ready())
+    print("[*]Done")
+
+
+def start_video_task():
+    print("[*]Start function video_task")
+    r = celery_app.send_task(name='video_task', queue='video', args=[56, 311])
     print(r.result)
     print(r.get())
     print(r.ready())
@@ -31,5 +48,6 @@ def start_add_sleep_10():
 
 
 if __name__ == "__main__":
-    # start_add_sleep_2()
-    start_add_sleep_10()
+    # start_default_task()
+    # start_music_task()
+    start_video_task()

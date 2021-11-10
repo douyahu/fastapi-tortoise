@@ -6,12 +6,52 @@
 """
 
 ############# 基础配置 ################
+from kombu import Queue, Exchange
+
 accept_content = ['json']  # 允许的内容类型，非该类型的数据将被丢弃/序列化程序的白名单
 result_accept_content = ['json']  # 允许结果后端的内容类型/序列化器的白名单。
 
 ############# 时区 #############
 enable_utc = False  # 使用UTC时间
 timezone = 'Asia/Shanghai'  # 时区
+
+################# 交换机和队列####################
+
+default_exchange = Exchange('default', type='direct')
+# 定义一个媒体交换机,类型是直连交换机
+media_exchange = Exchange('media', type='direct')
+
+task_queues = (
+    Queue('default', default_exchange, routing_key='default'),
+    Queue('music', media_exchange, routing_key='media.music'),
+    Queue('video', media_exchange, routing_key='media.video')
+)
+# 定义默认队列和默认的交换机routing_key
+task_default_queue = 'default'
+task_default_exchange = 'default'
+task_default_routing_key = 'default'
+
+task_routes = (
+    {
+        'default_task': {
+            'queue': 'default',
+            'routing_key': 'default'
+        }
+    },
+
+    {
+        'music_task': {
+            'queue': 'music',
+            'routing_key': 'media.music'
+        }
+    },
+    {
+        'video_task': {
+            'queue': 'video',
+            'routing_key': 'media.video'
+        }
+    }
+)
 
 ############# Task配置 #############
 task_annotations = None  # 重写配置中的任何task属性，默认为None
