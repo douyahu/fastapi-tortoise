@@ -18,4 +18,12 @@ services:
     restart: always
     volumes:
       - ./:/app
-    command: supervisord -c /app/backend/supervisor/confs/all.conf
+    command: supervisord -c /app/backend/supervisor/confs/log.conf
+
+  celery_backend:
+    image: fastapi-tortoise:latest
+    container_name: celery_backend
+    restart: always
+    volumes:
+      - ./:/app
+    command: supervisord -c /app/backend/supervisor/confs/celery.conf
