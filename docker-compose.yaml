@@ -27,3 +27,11 @@ services:
     volumes:
       - ./:/app
     command: supervisord -c /app/backend/supervisor/confs/celery.conf
+
+  flower:
+    image: fastapi-tortoise:latest
+    container_name: flower
+    restart: always
+    volumes:
+      - ./:/app
+    command: supervisord -c /app/backend/supervisor/confs/flower.conf

@@ -4,7 +4,7 @@ from .celery_app import celery_app
 
 
 
-@celery_app.task(name='add_sleep_2', serializer='json')  # 定义default_task测试函数
+@celery_app.task(name='default_task', serializer='json')  # 定义default_task测试函数
 def default_task(x, y) -> int:
     sleep(2)
     return x + y
