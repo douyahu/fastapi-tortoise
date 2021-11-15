@@ -13,7 +13,7 @@ from utils.Env import get as env
 from utils.Logger import log_info_path, should_rotate, logs_func
 
 secret = env("SECRET")
-lifetime_seconds = env("LIFETIME_SECONDS")
+lifetime_seconds = int(env("LIFETIME_SECONDS"))
 logging_level = env("LOGGING_LEVEL")
 
 mysql_host = env("MYSQL_HOST")

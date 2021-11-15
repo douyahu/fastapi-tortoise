@@ -37,9 +37,7 @@ class LoggingRoute(APIRoute):
                 header = dict(request.headers)
                 if "uuid" in header.keys():
                     uuid_str = header["uuid"]
-
                 user_agent = parse(request.headers["user-agent"])
-
                 browser = user_agent.browser.version
                 if len(browser) >= 2:
                     browser_major, browser_minor = browser[0], browser[1]
@@ -97,7 +95,6 @@ class LoggingRoute(APIRoute):
                     'time': f'{datetime.now():%Y-%m-%d %H:%M:%S%z}'
 
                 }
-
                 start_time = time.time()
                 response = await original_route_handler(request)
                 process_time = (time.time() - start_time) * 1000
@@ -120,22 +117,34 @@ class LoggingRoute(APIRoute):
                 }
 
                 if "health" not in request.url.path:
-                    # 添加所有router层的日志记录
-                    from app.api.v1.models import LogModel
-                    log_dict = {**request_json, **metrics_json}
-                    log_dict['useragent'] = str(log_dict['useragent'])
-                    log_dict['query'] = str(log_dict['query'])
-                    log_dict['body'] = str(log_dict['body'])
-                    log_dict['user'] = request.user
-                    await LogModel.create(**log_dict)
-                    logger.debug("request:{data}".format(data=json.dumps(request_json)))
-                    logger.debug("response:{data}".format(data=json.dumps(metrics_json)))
+                    await wirte_request_log(request.user, request_json, metrics_json)
                 return response
-
-            except Exception as exc:
+            except SyntaxError as exc:
                 body = await request.body()
-                detail = {"errors": str(exc.detail), "body": body.decode("utf-8")}
+                if isinstance(exc, SyntaxError):
+                    detail = {"errors": exc.msg, "body": body.decode("utf-8")}
+                else:
+                    detail = {"errors": str(exc.detail), "body": body.decode("utf-8")}
                 logger.error(detail)
                 raise HTTPException(status_code=422, detail=detail)
 
         return custom_route_handler
+
+
+async def wirte_request_log(user, request_json, metrics_json):
+    '''
+    记录所有router层的请求日志
+    :param user: 操作人员id
+    :param request_json: 请求json
+    :param metrics_json: 响应json
+    :return:
+    '''
+    from app.api.v1.models import LogModel
+    log_dict = {**request_json, **metrics_json}
+    log_dict['useragent'] = str(log_dict['useragent'])
+    log_dict['query'] = str(log_dict['query'])
+    log_dict['body'] = str(log_dict['body'])
+    log_dict['user'] = user
+    await LogModel.create(**log_dict)
+    logger.debug("request:{data}".format(data=json.dumps(request_json)))
+    logger.debug("response:{data}".format(data=json.dumps(metrics_json)))
