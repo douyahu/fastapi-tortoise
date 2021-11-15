@@ -71,7 +71,7 @@ pylint --rcfile=.pylintrc app
 ```
 
 
-### 添加celery
+### celery
 * celery对目录结构的要求十分严格
 * windows机器上必须加上-P eventlet启动，否则会出错，
 * -n 指定当前worker名字，
@@ -79,12 +79,44 @@ pylint --rcfile=.pylintrc app
 
 #### 常用方法
 建议使用 apply_async
-* delay， 用来进行最简单便捷的任务执行，不可附加参数；
-* apply_async， 对于任务的执行附加额外的参数，对任务进行控制；
+* delay 方法仅允许方法传参，不允许其他参数传递
+* apply 在本地执行此任务，不走消息队列，通过阻塞直到任务返回。
+* apply_async， 发送任务到消息队列，异步完成任务；
 * celery_app.send_task， 可以执行未在 Celery 中进行注册的任务。
 
+
+#### 启动命令
 ```shell
 celery -A backend.celery.celery_app worker -l info -P eventlet -n win_default
 celery -A backend.celery.celery_app worker -l info -P eventlet -n win_music -Q musice
 celery -A backend.celery.celery_app worker -l info -P eventlet -n win_video -Q video
+```
+
+#### 检查celery配置
+```shell
+python -m  backend.celery.celery_config
+```
+
+##### Eventlet
+利用协程编写的高度可扩展的，非阻塞I/O python Lib，不适用于CPU密集型操作 
+##### Gevent
+是一个基于 greenlet 的 Python 的并发框架，以微线程greenlet为核心，
+使用了epoll事件监听机制以及诸多其他优化而变得高效。
+
+##### 启动命令
+* -b: 指定不同的broker地址
+* worker -c: 指定并发数，默认为该机器上的CPU数
+* worker --help: worker 命令
+
+##### 启动flower
+
+```shell
+celery -A backend.celery.celery_app flower --conf=backend\\celery\\celery_config.py
+```
+
+
+### rabbitmq
+```shell
+rabbitmq-plugins list
+rabbitmq-plugins enable rabbitmq_management
 ```

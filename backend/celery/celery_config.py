@@ -78,8 +78,8 @@ task_reject_on_worker_lost = False
 
 
 ############# result backend 配置 #############
-
-result_backend = ''  # 运行结果存储地址实例
+# 结果存储在redis
+result_backend = 'redis://:password@hostname:6379/2'  # 运行结果存储地址实例
 result_backend_always_retry = False  # 如果启用，后端将尝试重试可恢复异常的事件，而不是传播异常。它将在 2 次重试之间使用指数退避睡眠时间。
 result_backend_max_sleep_between_retries_ms = 10000  # 两次后端操作重试之间的最大休眠时间
 result_backend_base_sleep_between_retries_ms = 10  # 这指定了两次后端操作重试之间的基本休眠时间。
@@ -100,7 +100,10 @@ database_table_schemas = {}  # 自动创建两个表来存储任务的结果元�
 database_table_names = {}  # 自动创建两个表来存储任务的结果元数据
 
 ############# broker配置 #############
-broker_url = ''  # broker地址
+# broker使用redis
+# broker_url = 'redis://:password@hostname:6379/1'  # broker地址
+# broker使用rabbitmq
+broker_url = 'amqp://username:password@hostname:5672/myvhost'  # broker地址
 # broker_read_url = 'amqp://user:pass@broker.example.com:56721' # 用于消费和生产的代理连接。
 # broker_write_url = 'amqp://user:pass@broker.example.com:56722' # 用于消费和生产的代理连接。
 # broker_failover_strategy
@@ -123,7 +126,7 @@ include = []  # 和import相同，只是用于加载特殊模块，以示区分
 # 为了避免查询溢出结果后端，在查询结果后端之前检查成功执行任务的本地缓存，以防任务已由接收任务的同一个工作人员成功执行。
 # 存储结果不是持久的，则忽略此设置。
 worker_deduplicate_successful_tasks = False
-worker_concurrency = 4  # CPU 内核数
+worker_concurrency = 4  # 默认为CPU内核数
 # 一次预取的消息数乘以并发进程数。默认值为 4（每个进程 4 条消息）。
 # 但是，默认设置通常是一个不错的选择
 # 如果您有很长的运行任务在队列中等待并且您必须启动工作程序，请注意第一个启动的工作程序将收到四倍于最初的消息数。
@@ -160,7 +163,7 @@ worker_log_color = True  # 日志是否要启用颜色
 worker_log_format = "[%(asctime)s: %(levelname)s/%(processName)s] %(message)s"  # 日志格式
 worker_task_log_format = "[%(asctime)s: %(levelname)s/%(processName)s]%(task_name)s[%(task_id)s]: %(message)s"
 worker_redirect_stdouts = True  # 将进程的屏幕、文件日志通过logging输出
-worker_redirect_stdouts_level = 'INFO'  # 日志级别(DEBUG，INFO，WARNING， ERROR，或CRITICAL)
+worker_redirect_stdouts_level = 'DEBUG'  # 日志级别(DEBUG，INFO，WARNING， ERROR，或CRITICAL)
 
 ############## 安全 ##############
 # 包含使用消息签名时用于签名消息的私钥的文件的相对或绝对路径
@@ -184,3 +187,19 @@ worker_pool_restarts = False  # 如果启用，可以使用pool_restart远程控
 # 如果设置为 1，beat 将在每个任务消息发送后调用同步。
 # beat_sync_every =
 # beat_max_loop_interval = # beat检查计划之间可以休眠的最大秒数
+
+
+############flower##############
+address = '127.0.0.1'
+broker_api = 'http://username:password@hostname:15672/api/'  # rabbitmq地址
+basic_auth = (['username:password'])  # 访问密码
+auto_refresh = True
+certfile = None
+keyfile = None
+format_task = None  # 过滤敏感信息
+inspect_timeout = 10000  # worker检查超时时间，默认10000
+max_tasks = 5000  # 内存中保留最大的task数目，默认5000
+port = 5555
+tasks_columns = 'name,uuid,state,args,kwargs,result,received,started,runtime,worker'  # 用逗号分隔列显示页面清单
+url_prefix = 'flower'
+# purge_offline_workers=    # 离线worker自动从仪表板中删除的时间s

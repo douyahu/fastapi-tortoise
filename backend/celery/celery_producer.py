@@ -71,6 +71,7 @@ def start_video_task():
 
 
 if __name__ == "__main__":
-    start_default_task()
+    for i in range(100):
+        start_default_task()
     # start_music_task()
     # start_video_task()
